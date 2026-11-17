@@ -1,8 +1,8 @@
 ---
-status: Approved
+status: In Review
 reviewed_by: Manager (via Markdown Studio)
-review_timestamp: 2026-11-17T10:56:56.164Z
-gate_signature: ACL-STUDIO-APPROVAL-APPROVED
+review_timestamp: 2026-11-17T10:57:00.759Z
+gate_signature: ACL-STUDIO-APPROVAL-IN-REVIEW
 title: "Product Brief: E-Commerce Web Storefront"
 project_type: greenfield
 created: "2026-11-12"
