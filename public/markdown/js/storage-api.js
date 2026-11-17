@@ -164,8 +164,9 @@ async function saveCurrentFile() {
   const file = getActiveFile();
   if (!file) return;
 
-  const content = document.getElementById('markdownTextarea').value;
-  const status = document.getElementById('statusSelect').value;
+  const content = document.getElementById('markdownTextarea')?.value || file.content || '';
+  const statusSelect = document.getElementById('statusSelect');
+  const status = (statusSelect && statusSelect.value) || file.status || 'In Review';
   const nowIso = new Date().toISOString();
 
   file.content = content;
@@ -311,10 +312,11 @@ async function onStatusChange(newStatus) {
   const nowIso = new Date().toISOString();
   file.updatedAt = nowIso;
 
-  const currentContent = document.getElementById('markdownTextarea').value || '';
+  const currentContent = document.getElementById('markdownTextarea')?.value || file.content || '';
   const updatedContent = updateDocumentStatusFrontmatter(currentContent, newStatus, nowIso);
 
-  document.getElementById('markdownTextarea').value = updatedContent;
+  const textarea = document.getElementById('markdownTextarea');
+  if (textarea) textarea.value = updatedContent;
   file.content = updatedContent;
 
   const ok = await saveCurrentFile();

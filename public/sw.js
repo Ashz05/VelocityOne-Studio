@@ -1,5 +1,5 @@
 // ACL-ADLC Markdown Studio Service Worker
-const CACHE_NAME = 'acl-studio-pwa-v1';
+const CACHE_NAME = 'acl-studio-pwa-v2';
 
 const STATIC_ASSETS = [
   '/',
@@ -17,18 +17,19 @@ const STATIC_ASSETS = [
   '/markdown/css/tree.css',
   '/markdown/css/working-tree.css',
   '/markdown/css/mobile-pwa.css',
-  '/markdown/js/state.js?v=9',
-  '/markdown/js/telemetry.js?v=9',
-  '/markdown/js/storage-api.js?v=10',
+  '/markdown/js/state.js?v=10',
+  '/markdown/js/telemetry.js?v=10',
+  '/markdown/js/storage-api.js?v=11',
   '/markdown/js/gmail.js?v=10',
   '/markdown/js/tree.js?v=10',
-  '/markdown/js/editor-preview.js?v=9',
-  '/markdown/js/workflow-modal.js?v=9',
-  '/markdown/js/drawer.js?v=9',
-  '/markdown/js/dashboard.js?v=9',
-  '/markdown/js/working-tree.js?v=9',
-  '/markdown/js/agents.js?v=9',
-  '/markdown/js/app.js?v=9',
+  '/markdown/js/editor-preview.js?v=10',
+  '/markdown/js/workflow-modal.js?v=10',
+  '/markdown/js/drawer.js?v=10',
+  '/markdown/js/dashboard.js?v=10',
+  '/markdown/js/working-tree.js?v=10',
+  '/markdown/js/agents.js?v=10',
+  '/markdown/js/app.js?v=10',
+  '/markdown/js/mobile-pwa.js?v=2',
   'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css'
