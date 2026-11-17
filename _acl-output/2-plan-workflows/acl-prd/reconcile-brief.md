@@ -1,8 +1,8 @@
 ---
-status: Approved
+status: In Review
 reviewed_by: Manager (via Markdown Studio)
-review_timestamp: 2026-11-12T13:26:15.659Z
-gate_signature: ACL-STUDIO-APPROVAL-APPROVED
+review_timestamp: 2026-11-17T10:53:11.035Z
+gate_signature: ACL-STUDIO-APPROVAL-IN-REVIEW
 title: "Project Reconcile-Brief"
 type: audit
 created: "2026-11-12"
