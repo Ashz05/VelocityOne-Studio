@@ -66,7 +66,8 @@ export function resolveGitHubCoordinates(projectRoot, query = {}) {
     return {
       owner: vercelOwner,
       repo: vercelRepo,
-      branch: vercelBranch || 'main',
+      branch: vercelBranch || 'master',
+      remoteOrigin: `https://github.com/${vercelOwner}/${vercelRepo}.git`,
       source: 'vercel-env',
     };
   }
@@ -203,15 +204,19 @@ export async function getGitDetails(projectRoot, options = {}) {
       }).trim();
       if (lsOut && lsOut.length > 0) liveRemoteExists = true;
     } catch (err) {
-      const errText = (
-        (err.stderr ? err.stderr.toString() : '') +
-        ' ' +
-        (err.stdout ? err.stdout.toString() : '') +
-        ' ' +
-        (err.message || '')
-      ).toLowerCase();
-      if (errText.includes('not found') || errText.includes('does not exist') || errText.includes('fatal: repository')) {
-        repoDeleted = true;
+      if (err && err.code === 'ENOENT') {
+        // Git executable is not installed in runtime environment (e.g. Vercel serverless)
+      } else {
+        const errText = (
+          (err.stderr ? err.stderr.toString() : '') +
+          ' ' +
+          (err.stdout ? err.stdout.toString() : '') +
+          ' ' +
+          (err.message || '')
+        ).toLowerCase();
+        if (errText.includes('repository not found') || errText.includes('does not exist') || errText.includes('fatal: repository')) {
+          repoDeleted = true;
+        }
       }
     }
 
@@ -223,19 +228,29 @@ export async function getGitDetails(projectRoot, options = {}) {
         stdio: ['ignore', 'pipe', 'ignore'],
       }).trim();
       isPushed = unpushedCommits.length === 0;
-    } catch {
-      try {
-        const localCommits = execFileSync('git', ['log', '-1', '--oneline'], {
-          cwd: projectRoot,
-          env,
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'ignore'],
-        }).trim();
-        isPushed = Boolean(localCommits);
-      } catch {
+    } catch (err) {
+      if (err && err.code === 'ENOENT') {
         isPushed = true;
+      } else {
+        try {
+          const localCommits = execFileSync('git', ['log', '-1', '--oneline'], {
+            cwd: projectRoot,
+            env,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+          }).trim();
+          isPushed = Boolean(localCommits);
+        } catch {
+          isPushed = true;
+        }
       }
     }
+  }
+
+  // When deployed on Vercel or Netlify, the deployment itself is verified from GitHub
+  if ((process.env.VERCEL || process.env.NETLIFY) && effectiveOwner && effectiveRepo) {
+    liveRemoteExists = true;
+    isPushed = true;
   }
 
   const token = resolveGitHubToken({ headers, query });
@@ -243,7 +258,7 @@ export async function getGitDetails(projectRoot, options = {}) {
   if (effectiveOwner && effectiveRepo && !repoDeleted) {
     try {
       const repoRes = await fetchGitHubRepo(effectiveOwner, effectiveRepo, token);
-      if (repoRes.status === 404) {
+      if (repoRes.status === 404 && token) {
         repoDeleted = true;
         liveRemoteExists = false;
       } else if (repoRes.ok) {
