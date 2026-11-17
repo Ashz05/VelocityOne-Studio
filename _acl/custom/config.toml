@@ -1,0 +1,26 @@
+# Team / enterprise overrides for _acl/config.toml.
+# Committed to the repo — applies to every developer on the project.
+# Tables deep-merge over base config; keyed entries merge by key.
+
+[agents.acl-custom-agent-creator]
+name = "Scout"
+title = "Custom Agent Architect"
+icon = "🛠️"
+team = "software-development"
+description = "Interview developers and teams to design, architect, and scaffold custom AI agents that seamlessly integrate into the ACL-ADLC software delivery lifecycle and phase-gate governance."
+
+[agents.acl-agent-python-reviewer]
+name = "Alex"
+title = "Python Code Reviewer"
+icon = "🐍"
+team = "software-development"
+description = "Audit Python codebases against PEP standards, typing contracts, security, and performance; generate structured markdown review reports and optionally refactor code with automated best-practice remediation."
+
+[agents.acl-agent-security-auditor]
+name = "Diana"
+title = "Security & Compliance Auditor"
+icon = "🛡️"
+team = "software-development"
+description = "Lead security architect and compliance auditor; evaluates architecture designs, zero-trust boundaries, OWASP Top 10 risks, and generates threat models in Phase 3 Solutioning."
+
+

@@ -1,0 +1,281 @@
+/* ACL-ADLC Markdown Studio Mobile PWA Styling */
+
+/* Mobile Header Hamburger & Drawer Controls */
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-color, #334155);
+  color: var(--text-primary, #f1f5f9);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-toggle:active {
+  background: var(--bg-surface-hover, #1e293b);
+  transform: scale(0.95);
+}
+
+.mobile-drawer-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-drawer-backdrop.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Sticky Manager Mobile Approval Bar */
+.mobile-approval-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(51, 65, 85, 0.8);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  padding: 10px 14px max(12px, env(safe-area-inset-bottom));
+  z-index: 9990;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mobile-approval-status {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 90px;
+}
+
+.mobile-approval-status-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #94a3b8);
+  font-weight: 600;
+}
+
+.mobile-approval-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.mobile-approval-badge.in-review {
+  color: #eab308;
+}
+
+.mobile-approval-badge.approved {
+  color: #22c55e;
+}
+
+.mobile-approval-badge.rejected {
+  color: #ef4444;
+}
+
+.mobile-approval-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.mobile-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-action-btn:active {
+  transform: scale(0.96);
+}
+
+.mobile-btn-reject {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.mobile-btn-reject:active,
+.mobile-btn-reject.active {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.mobile-btn-review {
+  background: rgba(234, 179, 8, 0.12);
+  color: #fde047;
+  border-color: rgba(234, 179, 8, 0.4);
+  padding: 0 10px;
+}
+
+.mobile-btn-review:active,
+.mobile-btn-review.active {
+  background: #eab308;
+  color: #0f172a;
+  border-color: #eab308;
+}
+
+.mobile-btn-approve {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #22c55e;
+  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.3);
+  flex: 1.2;
+}
+
+.mobile-btn-approve:active,
+.mobile-btn-approve.active {
+  background: #15803d;
+  transform: scale(0.96);
+}
+
+/* Responsive Overrides for Phones (< 768px) */
+@media screen and (max-width: 768px) {
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  /* Sticky Bottom Approval Bar Display */
+  .mobile-approval-bar {
+    display: flex;
+  }
+
+  /* Make header compact on mobile */
+  header {
+    height: 52px;
+    padding: 0 12px;
+  }
+
+  .brand-logo {
+    height: 24px;
+    width: auto;
+  }
+
+  .brand span#appHeaderTitle {
+    font-size: 13px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Hide desktop save & sync indicator from header on mobile (handled by mobile bar) */
+  .header-actions .btn-update,
+  .header-actions .file-sync-indicator {
+    display: none;
+  }
+
+  /* Off-canvas sidebar file tree */
+  .app-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  aside.sidebar {
+    position: fixed;
+    top: 52px;
+    bottom: 0;
+    left: 0;
+    width: 82vw;
+    max-width: 340px;
+    background: var(--bg-secondary, #0f172a);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+    border-right: 1px solid var(--border-color, #334155);
+  }
+
+  aside.sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Workspace fills mobile viewport */
+  main.workspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-bottom: 76px !important; /* space for mobile-approval-bar */
+  }
+
+  .editor-status-bar {
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .editor-status-bar .status-selection-area {
+    display: none; /* replaced by mobile-approval-bar */
+  }
+
+  .editor-wrapper {
+    height: calc(100vh - 150px) !important;
+  }
+
+  /* Reader experience improvements for small screens */
+  .markdown-body {
+    padding: 16px 14px 90px 14px !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+  }
+
+  .markdown-body h1 {
+    font-size: 22px !important;
+    line-height: 1.25 !important;
+  }
+
+  .markdown-body h2 {
+    font-size: 18px !important;
+    margin-top: 24px !important;
+  }
+
+  .markdown-body table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    font-size: 13px;
+  }
+
+  .markdown-body pre {
+    border-radius: 8px;
+    font-size: 13px;
+  }
+}

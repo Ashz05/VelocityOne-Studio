@@ -1,0 +1,35 @@
+{
+  "name": "ACL-ADLC Markdown Studio & Gate Guard",
+  "short_name": "Studio Gate",
+  "description": "Mobile Review & Phase Gate Approval for ACL-ADLC Software Delivery",
+  "start_url": "/markdown.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/vo-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/velocityone-studio-logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity", "developer tools"],
+  "shortcuts": [
+    {
+      "name": "In Review Documents",
+      "short_name": "Reviews",
+      "description": "View documents awaiting sign-off",
+      "url": "/markdown.html?filter=in-review",
+      "icons": [{ "src": "/vo-icon.svg", "sizes": "any" }]
+    }
+  ]
+}
