@@ -1,43 +1,51 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
+  "cleanUrls": false,
   "functions": {
-    "api/**/*.js": {
+    "api/*.js": {
       "includeFiles": "tools/**"
     }
   },
   "rewrites": [
     {
-      "source": "/api/atlassian/config",
-      "destination": "/api/atlassian-config"
+      "source": "/api/atlassian/:route",
+      "destination": "/api/atlassian?route=:route"
     },
     {
-      "source": "/api/atlassian/discover",
-      "destination": "/api/atlassian-discover"
+      "source": "/api/atlassian-config",
+      "destination": "/api/atlassian?route=config"
     },
     {
-      "source": "/api/atlassian/sync-jira",
-      "destination": "/api/atlassian-sync-jira"
+      "source": "/api/atlassian-discover",
+      "destination": "/api/atlassian?route=discover"
     },
     {
-      "source": "/api/atlassian/pull-jira",
-      "destination": "/api/atlassian-pull-jira"
+      "source": "/api/atlassian-sync-jira",
+      "destination": "/api/atlassian?route=sync-jira"
     },
     {
-      "source": "/api/atlassian/sync-confluence",
-      "destination": "/api/atlassian-sync-confluence"
+      "source": "/api/atlassian-pull-jira",
+      "destination": "/api/atlassian?route=pull-jira"
     },
     {
-      "source": "/api/atlassian/pull-confluence",
-      "destination": "/api/atlassian-pull-confluence"
+      "source": "/api/atlassian-sync-confluence",
+      "destination": "/api/atlassian?route=sync-confluence"
     },
     {
-      "source": "/api/atlassian/sync-history",
-      "destination": "/api/atlassian-sync-history"
+      "source": "/api/atlassian-pull-confluence",
+      "destination": "/api/atlassian?route=pull-confluence"
+    },
+    {
+      "source": "/api/atlassian-sync-history",
+      "destination": "/api/atlassian?route=sync-history"
     },
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
+    },
+    {
+      "source": "/markdown",
+      "destination": "/markdown.html"
     },
     {
       "source": "/markdown.html",
