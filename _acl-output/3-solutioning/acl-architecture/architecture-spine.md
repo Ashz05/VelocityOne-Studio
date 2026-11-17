@@ -1,8 +1,8 @@
 ---
-status: Approved
+status: In Review
 reviewed_by: Manager (via Markdown Studio)
-review_timestamp: 2026-11-16T10:20:13.834Z
-gate_signature: ACL-STUDIO-APPROVAL-APPROVED
+review_timestamp: 2026-11-17T10:53:26.003Z
+gate_signature: ACL-STUDIO-APPROVAL-IN-REVIEW
 title: "Architecture Spine: E-Commerce Web Storefront"
 name: "e-commerce-web-storefront"
 type: architecture-spine
