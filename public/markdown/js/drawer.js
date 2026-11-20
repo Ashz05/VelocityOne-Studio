@@ -10,7 +10,9 @@ function toggleNavDrawer() {
 
 function openNavDrawer() {
   const drawer = document.getElementById('navDrawer');
+  const backdrop = document.getElementById('navDrawerBackdrop');
   if (drawer) drawer.classList.add('open');
+  if (backdrop) backdrop.classList.add('open');
 }
 
 function closeNavDrawer() {
@@ -36,6 +38,9 @@ function handleNavDrawerHoverLeave() {
   }
   navDrawerHoverTimer = setTimeout(() => {
     closeNavDrawer();
+  if (typeof closeMobileDocSidebar === 'function') {
+    closeMobileDocSidebar();
+  }
   }, 180);
 }
 
@@ -66,6 +71,9 @@ function switchAppView(view) {
     sessionStorage.setItem('acl_last_active_view', normalizedView);
   } catch (e) {}
   closeNavDrawer();
+  if (typeof closeMobileDocSidebar === 'function') {
+    closeMobileDocSidebar();
+  }
 
   openAccordionEpicIndex = null;
   openStoryKey = null;
@@ -121,7 +129,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Summarized';
     clearNavActive();
     if (navSummarized) navSummarized.classList.add('active');
     if (railSummarized) railSummarized.classList.add('active');
@@ -136,7 +144,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Scrum Master';
     clearNavActive();
     if (navScrum) navScrum.classList.add('active');
     if (railScrum) railScrum.classList.add('active');
@@ -151,7 +159,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Developer';
     clearNavActive();
     if (navDeveloper) navDeveloper.classList.add('active');
     if (railDeveloper) railDeveloper.classList.add('active');
@@ -166,7 +174,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Working Tree';
     clearNavActive();
     if (navWorkingTree) navWorkingTree.classList.add('active');
     if (railWorkingTree) railWorkingTree.classList.add('active');
@@ -181,7 +189,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'block';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'User Control';
     clearNavActive();
     if (navGit) navGit.classList.add('active');
     if (railGit) railGit.classList.add('active');
@@ -196,7 +204,7 @@ function switchAppView(view) {
     if (studioView) studioView.style.display = 'none';
     if (dashboardView) dashboardView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'flex';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Agents Info';
     clearNavActive();
     if (navAgents) navAgents.classList.add('active');
     if (railAgents) railAgents.classList.add('active');
@@ -213,7 +221,7 @@ function switchAppView(view) {
     if (dashboardView) dashboardView.style.display = 'none';
     if (agentsView) agentsView.style.display = 'none';
     if (studioView) studioView.style.display = 'flex';
-    if (headerTitle) headerTitle.textContent = '';
+    if (headerTitle) headerTitle.textContent = 'Markdown Studio';
     clearNavActive();
     if (navStudio) navStudio.classList.add('active');
     if (railStudio) railStudio.classList.add('active');

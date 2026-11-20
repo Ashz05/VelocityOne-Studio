@@ -14,9 +14,23 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// 2. Mobile Drawer Navigation
-function toggleMobileSidebar() {
-  const sidebar = document.querySelector('aside.sidebar');
+// 2. Primary Mobile Navigation Drawer Controls
+function toggleMobileNavDrawer() {
+  if (typeof toggleNavDrawer === 'function') {
+    toggleNavDrawer();
+  } else {
+    const drawer = document.getElementById('navDrawer');
+    const backdrop = document.getElementById('navDrawerBackdrop');
+    if (drawer) drawer.classList.toggle('open');
+    if (backdrop) backdrop.classList.toggle('open');
+  }
+}
+
+// 3. Document / Agent Sidebar Drawer Controls
+function toggleMobileDocSidebar() {
+  const isAgents = document.body.classList.contains('view-agents');
+  const targetSelector = isAgents ? '#agentsView aside.sidebar' : '#studioView aside.sidebar';
+  const sidebar = document.querySelector(targetSelector) || document.querySelector('aside.sidebar');
   const backdrop = document.getElementById('mobileDrawerBackdrop');
   if (sidebar && backdrop) {
     sidebar.classList.toggle('mobile-open');
@@ -24,23 +38,31 @@ function toggleMobileSidebar() {
   }
 }
 
-function closeMobileSidebar() {
-  const sidebar = document.querySelector('aside.sidebar');
+function closeMobileDocSidebar() {
+  const sidebars = document.querySelectorAll('aside.sidebar');
   const backdrop = document.getElementById('mobileDrawerBackdrop');
-  if (sidebar && backdrop) {
-    sidebar.classList.remove('mobile-open');
-    backdrop.classList.remove('active');
-  }
+  sidebars.forEach((sb) => sb.classList.remove('mobile-open'));
+  if (backdrop) backdrop.classList.remove('active');
 }
 
-// Close drawer automatically when a document is selected
+// Close doc drawer automatically when a document or agent item is clicked on mobile
 document.addEventListener('click', (e) => {
-  if (window.innerWidth <= 768 && e.target.closest('.file-item')) {
-    closeMobileSidebar();
+  if (window.innerWidth <= 768) {
+    if (e.target.closest('.file-item') || e.target.closest('.agent-item')) {
+      closeMobileDocSidebar();
+    }
   }
 });
 
-// 3. Sync Mobile Approval Bar Status
+// 4. Update Mobile Active File Display Pill
+function updateMobileActiveFileName(fileName) {
+  const el = document.getElementById('mobileActiveFileName');
+  if (el) {
+    el.textContent = fileName || 'Select Document';
+  }
+}
+
+// 5. Sync Mobile Approval Bar Status
 function syncMobileApprovalBar(status) {
   const badge = document.getElementById('mobileStatusBadge');
   const btnApprove = document.getElementById('btnMobileApprove');
@@ -69,7 +91,7 @@ function syncMobileApprovalBar(status) {
   }
 }
 
-// 4. Handle Manager Mobile Approval Actions
+// 6. Handle Manager Mobile Approval Actions
 async function applyMobileApproval(decision) {
   const file = typeof getActiveFile === 'function' ? getActiveFile() : null;
   if (!file) {
@@ -108,7 +130,11 @@ async function applyMobileApproval(decision) {
 }
 
 // Expose globally
-window.toggleMobileSidebar = toggleMobileSidebar;
-window.closeMobileSidebar = closeMobileSidebar;
+window.toggleMobileSidebar = toggleMobileDocSidebar; // backward compatibility
+window.closeMobileSidebar = closeMobileDocSidebar;   // backward compatibility
+window.toggleMobileNavDrawer = toggleMobileNavDrawer;
+window.toggleMobileDocSidebar = toggleMobileDocSidebar;
+window.closeMobileDocSidebar = closeMobileDocSidebar;
+window.updateMobileActiveFileName = updateMobileActiveFileName;
 window.syncMobileApprovalBar = syncMobileApprovalBar;
 window.applyMobileApproval = applyMobileApproval;

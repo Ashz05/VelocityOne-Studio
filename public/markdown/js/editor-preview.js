@@ -29,10 +29,15 @@ function loadFile(id, openFolder = false) {
   }
 
   const statusSelect = document.getElementById('statusSelect');
-  statusSelect.disabled = false;
-  statusSelect.value = file.status === 'Accepted' ? 'Approved' : file.status;
+  if (statusSelect) {
+    statusSelect.disabled = false;
+    statusSelect.value = file.status === 'Accepted' ? 'Approved' : file.status;
+  }
   if (typeof syncMobileApprovalBar === 'function') {
-    syncMobileApprovalBar(statusSelect.value);
+    syncMobileApprovalBar(file.status === 'Accepted' ? 'Approved' : file.status);
+  }
+  if (typeof updateMobileActiveFileName === 'function') {
+    updateMobileActiveFileName(file.filename);
   }
 
   const textarea = document.getElementById('markdownTextarea');

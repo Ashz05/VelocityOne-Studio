@@ -195,7 +195,7 @@ async function universalHandler(arg1, arg2) {
       process.env.VERCEL_GIT_COMMIT_REF ||
       process.env.BRANCH ||
       process.env.HEAD ||
-      'master'
+      'main'
     ).trim();
 
     // Auto-detect owner and repo from Netlify REPOSITORY_URL or package.json if not explicitly provided

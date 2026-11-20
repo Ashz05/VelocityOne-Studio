@@ -165,6 +165,7 @@
         <div class="nav-drawer-brand">
           <img class="brand-logo" src="/velocityone-studio-logo.png" alt="VelocityONE Studio" />
         </div>
+        <button type="button" class="nav-drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close Navigation">✕</button>
       </div>
       <nav class="nav-drawer-menu">
         <div class="nav-drawer-section-label">📊 Dashboard</div>
@@ -240,7 +241,7 @@
     <!-- Top Application Header -->
     <header>
       <div class="brand-container">
-        <button type="button" class="mobile-nav-toggle" id="btnMobileNav" onclick="toggleMobileSidebar()" aria-label="Toggle Navigation" title="Toggle Document List">
+        <button type="button" class="mobile-nav-toggle" id="btnMobileNav" onclick="toggleMobileNavDrawer()" aria-label="Toggle Navigation" title="Toggle Navigation Menu">
           ☰
         </button>
         <div class="brand">
@@ -250,6 +251,11 @@
       </div>
 
       <div class="header-actions">
+        <!-- Mobile Document Selector Button (only visible on mobile in Studio / Agents view) -->
+        <button type="button" class="mobile-doc-toggle-btn" id="btnMobileDocList" onclick="toggleMobileDocSidebar()" aria-label="Toggle Document List" title="Select Document">
+          <span>📑 Docs</span>
+        </button>
+
         <!-- Help: Delivery Workflow dropdown -->
         <div class="workflow-dropdown-wrapper" id="workflowDropdownWrapper">
           <button
@@ -310,12 +316,16 @@
     </header>
 
     <!-- Mobile Drawer Backdrop Overlay -->
-    <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop" onclick="closeMobileSidebar()"></div>
+    <div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop" onclick="closeMobileDocSidebar()"></div>
 
     <!-- Main Layout -->
     <div class="app-container" id="studioView">
       <!-- Sidebar -->
       <aside class="sidebar">
+        <div class="sidebar-mobile-header">
+          <span>📑 Documents</span>
+          <button type="button" class="sidebar-mobile-close" onclick="closeMobileDocSidebar()" aria-label="Close Document List">✕</button>
+        </div>
         <div class="sidebar-controls">
           <div class="search-input-wrapper">
             <span class="search-icon">🔍</span>
@@ -364,6 +374,12 @@
       <!-- Workspace -->
       <main class="workspace">
         <div class="editor-status-bar">
+          <div class="mobile-active-file-pill" onclick="toggleMobileDocSidebar()" id="mobileActiveFilePill" title="Tap to select document">
+            <span class="pill-icon">📄</span>
+            <span class="pill-text" id="mobileActiveFileName">Select Document</span>
+            <span class="pill-arrow">▾</span>
+          </div>
+
           <div class="status-selection-area">
             <span class="status-label">Document Status:</span>
             <div class="status-select-wrap">
@@ -430,6 +446,10 @@
     <div class="app-container" id="agentsView" style="display: none">
       <!-- Sidebar -->
       <aside class="sidebar">
+        <div class="sidebar-mobile-header">
+          <span>🤖 Agents Info</span>
+          <button type="button" class="sidebar-mobile-close" onclick="closeMobileDocSidebar()" aria-label="Close Agents List">✕</button>
+        </div>
         <div class="sidebar-controls">
           <div class="search-input-wrapper">
             <span class="search-icon">🔍</span>
@@ -453,6 +473,12 @@
       <!-- Workspace (Read-Only Preview) -->
       <main class="workspace">
         <div class="editor-status-bar">
+          <div class="mobile-active-file-pill" onclick="toggleMobileDocSidebar()" id="mobileActiveAgentPill" title="Tap to select agent">
+            <span class="pill-icon">🤖</span>
+            <span class="pill-text" id="mobileActiveAgentName">Select Agent</span>
+            <span class="pill-arrow">▾</span>
+          </div>
+
           <div class="status-selection-area">
             <span class="status-label">Agent Specification:</span>
             <span id="agentsCurrentPath" class="agents-current-path">Select an agent</span>
@@ -490,18 +516,18 @@
     </div>
 
     <!-- Modular JavaScript Scripts -->
-    <script src="/markdown/js/state.js?v=10"></script>
-    <script src="/markdown/js/telemetry.js?v=10"></script>
+    <script src="/markdown/js/state.js?v=11"></script>
+    <script src="/markdown/js/telemetry.js?v=11"></script>
     <script src="/markdown/js/storage-api.js?v=11"></script>
-    <script src="/markdown/js/gmail.js?v=10"></script>
-    <script src="/markdown/js/tree.js?v=10"></script>
-    <script src="/markdown/js/editor-preview.js?v=10"></script>
-    <script src="/markdown/js/workflow-modal.js?v=10"></script>
-    <script src="/markdown/js/drawer.js?v=10"></script>
-    <script src="/markdown/js/dashboard.js?v=10"></script>
-    <script src="/markdown/js/working-tree.js?v=10"></script>
-    <script src="/markdown/js/agents.js?v=10"></script>
-    <script src="/markdown/js/app.js?v=10"></script>
-    <script src="/markdown/js/mobile-pwa.js?v=2"></script>
+    <script src="/markdown/js/gmail.js?v=11"></script>
+    <script src="/markdown/js/tree.js?v=11"></script>
+    <script src="/markdown/js/editor-preview.js?v=11"></script>
+    <script src="/markdown/js/workflow-modal.js?v=11"></script>
+    <script src="/markdown/js/drawer.js?v=11"></script>
+    <script src="/markdown/js/dashboard.js?v=11"></script>
+    <script src="/markdown/js/working-tree.js?v=11"></script>
+    <script src="/markdown/js/agents.js?v=11"></script>
+    <script src="/markdown/js/app.js?v=11"></script>
+    <script src="/markdown/js/mobile-pwa.js?v=3"></script>
   </body>
 </html>

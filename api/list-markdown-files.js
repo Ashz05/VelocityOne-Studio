@@ -189,7 +189,7 @@ async function universalHandler(arg1, arg2) {
       process.env.VERCEL_GIT_COMMIT_REF ||
       process.env.BRANCH ||
       process.env.HEAD ||
-      'master'
+      'main'
     ).trim();
 
     // Auto-detect owner and repo from Netlify REPOSITORY_URL or package.json
@@ -242,13 +242,7 @@ async function universalHandler(arg1, arg2) {
         }
 
         const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`;
-        let treeRes = await fetch(treeUrl, { headers });
-        if (!treeRes.ok && (branch === 'main' || branch === 'master')) {
-          const altBranch = branch === 'main' ? 'master' : 'main';
-          const altUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${encodeURIComponent(altBranch)}?recursive=1`;
-          const altRes = await fetch(altUrl, { headers });
-          if (altRes.ok) treeRes = altRes;
-        }
+        const treeRes = await fetch(treeUrl, { headers });
 
         if (treeRes.ok) {
           const treeJson = await treeRes.json();
