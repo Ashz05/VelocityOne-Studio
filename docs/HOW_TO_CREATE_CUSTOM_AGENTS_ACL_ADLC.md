@@ -6,27 +6,27 @@ A comprehensive architectural and practical guide on how to design, build, and r
 
 ## 📑 Table of Contents
 
-1. [Executive Summary & Directory Architecture](#1-executive-summary--directory-architecture)
+1. [Executive Summary &amp; Directory Architecture](#1-executive-summary--directory-architecture)
 2. [The Core Decision: Important Agent vs. Non-Important (Utility) Agent](#2-the-core-decision-important-agent-vs-non-important-utility-agent)
 3. [Visual Decision Framework](#3-visual-decision-framework)
 4. [Standard Agent Anatomy (Common to All Agents)](#4-standard-agent-anatomy-common-to-all-agents)
-   - [File 1: SKILL.md (System Instructions & Gate Guard)](#file-1-skillmd-system-instructions--gate-guard)
-   - [File 2: customize.toml (Persona, Icon & Action Menu)](#file-2-customizetoml-persona-icon--action-menu)
+   - [File 1: SKILL.md (System Instructions &amp; Gate Guard)](#file-1-skillmd-system-instructions--gate-guard)
+   - [File 2: customize.toml (Persona, Icon &amp; Action Menu)](#file-2-customizetoml-persona-icon--action-menu)
    - [File 3: Central Roster Registration (_acl/custom/config.toml)](#file-3-central-roster-registration-_aclcustomconfigtoml)
 5. [Deep Dive: Non-Important / Utility Agent (Zero `markdown.html` Edits)](#5-deep-dive-non-important--utility-agent-zero-markdownhtml-edits)
    - [How It Automatically Reflects in Studio](#how-it-automatically-reflects-in-studio)
    - [Walkthrough: Alex (Python Code Reviewer)](#walkthrough-alex-python-code-reviewer)
 6. [Deep Dive: Important / Phase-Gate Driving Agent (Full `markdown.html` Implementation)](#6-deep-dive-important--phase-gate-driving-agent-full-markdownhtml-implementation)
    - [Step 1: Next-Agent Floating Notification (`floating-nav.js`)](#step-1-next-agent-floating-notification-floating-navjs)
-   - [Step 2: Working Tree & Delivery Position Tracker (`working-tree.js` & `working_tree.py`)](#step-2-working-tree--delivery-position-tracker-working-treejs--working_treepy)
+   - [Step 2: Working Tree &amp; Delivery Position Tracker (`working-tree.js` &amp; `working_tree.py`)](#step-2-working-tree--delivery-position-tracker-working-treejs--working_treepy)
    - [Step 3: Executive Stakeholder Metadata (`agents.js`)](#step-3-executive-stakeholder-metadata-agentsjs)
-   - [Step 4: Canonical Phase & Module Mapping (`agents.js` & `api/list-agents.js`)](#step-4-canonical-phase--module-mapping-agentsjs--apilist-agentsjs)
+   - [Step 4: Canonical Phase &amp; Module Mapping (`agents.js` &amp; `api/list-agents.js`)](#step-4-canonical-phase--module-mapping-agentsjs--apilist-agentsjs)
    - [Step 5: Offline Cache Refresh (`public/acl-agents.json`)](#step-5-offline-cache-refresh-publicacl-agentsjson)
 7. [Comprehensive Comparison Matrix](#7-comprehensive-comparison-matrix)
 8. [End-to-End Case Studies](#8-end-to-end-case-studies)
    - [Case Study A: Non-Important Agent — Database Query Optimizer](#case-study-a-non-important-agent--database-query-optimizer)
    - [Case Study B: Important Agent — Security Gatekeeper (Mandatory Gate 3C)](#case-study-b-important-agent--security-gatekeeper-mandatory-gate-3c)
-9. [Cache Invalidation & Troubleshooting](#9-cache-invalidation--troubleshooting)
+9. [Cache Invalidation &amp; Troubleshooting](#9-cache-invalidation--troubleshooting)
 10. [Verification Checklist](#10-verification-checklist)
 
 ---
@@ -36,24 +36,25 @@ A comprehensive architectural and practical guide on how to design, build, and r
 In ACL-ADLC, software delivery is structured through sequential, human-in-the-loop phase gates governed in **Markdown Studio** (`http://localhost:5173/markdown.html`).
 
 Markdown Studio serves two distinct roles:
+
 1. **The Phase-Gate Delivery Command Center**: Tracks project progress across Phase 1 Analysis, Phase 2 Planning, Phase 3 Solutioning, and Phase 4 Implementation. Managers review deliverables, click **Approve** or **Reject**, and Markdown Studio orchestrates the next recommended agent handoff.
 2. **The Agents & Skills Catalog Browser (`🤖 agents-info`)**: A comprehensive directory where stakeholders and developers can inspect every available AI agent, read their executive business value, and copy 1-click execution commands for Claude Code, Cursor, Windsurf, GitHub Copilot, and Antigravity (AGY).
 
 ### Key Files in this Repository
 
-| Path | Purpose in Workspace |
-| :--- | :--- |
-| [public/markdown.html](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown.html) | The primary single-page Markdown Studio dashboard & manager review console. |
-| [public/markdown/js/agents.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/agents.js) | Powers the `🤖 Agents` browser tab: lists agents, maps phase badges, and renders executive preview cards. |
+| Path                                                                                                                                                          | Purpose in Workspace                                                                                                  |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
+| [public/markdown.html](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown.html)                             | The primary single-page Markdown Studio dashboard & manager review console.                                           |
+| [public/markdown/js/agents.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/agents.js)             | Powers the `🤖 Agents` browser tab: lists agents, maps phase badges, and renders executive preview cards.           |
 | [public/markdown/js/floating-nav.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/floating-nav.js) | The floating notification bar. When a manager approves a deliverable, this tells the user which agent to invoke next. |
-| [public/markdown/js/working-tree.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/working-tree.js) | Visualizes the live delivery position tree and maps skills to agent personas (`WT_AGENTS`, `WT_SKILL_AGENT`). |
-| [_acl/scripts/working_tree.py](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/_acl/scripts/working_tree.py) | Python CLI that tracks agent events and writes `_acl-output/working-tree.md`. |
-| [api/list-agents.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/api/list-agents.js) | Universal serverless API that scans workspace skill directories and outputs agent JSON for Studio. |
-| [vite.config.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/vite.config.js) | Development server middleware serving `/api/list-agents` dynamically or via static cache. |
-| [public/acl-agents.json](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/acl-agents.json) | Pre-generated static snapshot of installed agents used for offline or cached Studio loading. |
-| [_acl/custom/config.toml](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/_acl/custom/config.toml) | Central team roster registering custom agent personas for Party Mode and global discovery. |
-| `.agents/skills/<agent-slug>/` | Runtime directory where agent skill definitions (`SKILL.md`, `customize.toml`) reside. |
-| `_acl-output/` | Output directory where phase deliverables land and are evaluated by gate guards. |
+| [public/markdown/js/working-tree.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/working-tree.js) | Visualizes the live delivery position tree and maps skills to agent personas (`WT_AGENTS`, `WT_SKILL_AGENT`).     |
+| [_acl/scripts/working_tree.py](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/_acl/scripts/working_tree.py)             | Python CLI that tracks agent events and writes `_acl-output/working-tree.md`.                                       |
+| [api/list-agents.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/api/list-agents.js)                                 | Universal serverless API that scans workspace skill directories and outputs agent JSON for Studio.                    |
+| [vite.config.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/vite.config.js)                                         | Development server middleware serving `/api/list-agents` dynamically or via static cache.                           |
+| [public/acl-agents.json](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/acl-agents.json)                         | Pre-generated static snapshot of installed agents used for offline or cached Studio loading.                          |
+| [_acl/custom/config.toml](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/_acl/custom/config.toml)                       | Central team roster registering custom agent personas for Party Mode and global discovery.                            |
+| `.agents/skills/<agent-slug>/`                                                                                                                              | Runtime directory where agent skill definitions (`SKILL.md`, `customize.toml`) reside.                            |
+| `_acl-output/`                                                                                                                                              | Output directory where phase deliverables land and are evaluated by gate guards.                                      |
 
 ---
 
@@ -84,7 +85,9 @@ Whenever a developer or team creates a custom agent for ACL-ADLC, the first arch
 ### Detailed Breakdown
 
 #### 🔴 Category A: Important Agent (Needs Implementation in `markdown.html`)
+
 An agent is **Important** if it acts as a primary delivery gatekeeper in the sequential software lifecycle.
+
 - **Key Characteristics**:
   - Produces a primary phase document (e.g. a mandatory Security Spine `security-spine.md`, an API Contract `api-spec.md`, or a Database Blueprint `schema-spine.md`).
   - Halts the entire downstream team until a Manager reviews and approves its deliverable in Markdown Studio.
@@ -96,7 +99,9 @@ An agent is **Important** if it acts as a primary delivery gatekeeper in the seq
   - `agents.js` needs curated executive metadata in `SKILL_OFFICE_REGISTRY` for non-technical stakeholders.
 
 #### 🟢 Category B: Non-Important / Utility Agent (No Implementation in `markdown.html` Needed)
+
 An agent is **Non-Important (Utility)** if it performs supportive, exploratory, diagnostic, or advisory work.
+
 - **Key Characteristics**:
   - Does NOT introduce a mandatory blocking gate in the core delivery cascade.
   - Operates on demand (e.g., Alex the Python Code Reviewer auditing PEP 8 compliance, a unit test generator, an idea brainstorming assistant, or a documentation formatter).
@@ -116,13 +121,13 @@ Use this flowchart whenever designing a new agent to immediately determine the i
 ```mermaid
 flowchart TD
     Start(["New Agent Idea"]) --> Q1{"Does this agent produce a document that BLOCKS downstream phases until Manager Approval?"}
-    
+  
     Q1 -- Yes --> Q2{"Should Markdown Studio suggest this agent in the Floating Bar when an upstream document is Approved?"}
     Q1 -- No --> UtilityAgent["🟢 NON-IMPORTANT / UTILITY AGENT<br/>(Advisory, Code Reviewer, Helper)"]
-    
+  
     Q2 -- Yes --> Q3{"Should this agent be tracked as an official stage in the Working Tree delivery position?"}
     Q2 -- No --> UtilityAgent
-    
+  
     Q3 -- Yes --> ImportantAgent["🔴 IMPORTANT AGENT<br/>(Phase-Gate Driver)"]
     Q3 -- No --> UtilityAgent
 
@@ -162,12 +167,14 @@ Regardless of whether an agent is **Important** or **Utility**, it must follow t
 ### Folder Placement
 
 Place the agent in:
+
 ```text
 .agents/skills/<folder-name>/
 ```
+
 > [!TIP]
-> **Folder Naming Convention**:  
-> Include the phase token in the folder name to allow Markdown Studio to automatically categorize it into the right phase:
+> **Folder Naming Convention**:Include the phase token in the folder name to allow Markdown Studio to automatically categorize it into the right phase:
+>
 > - Phase 1: `.agents/skills/1-analysis-acl-agent-<slug>/`
 > - Phase 2: `.agents/skills/2-plan-acl-agent-<slug>/`
 > - Phase 3: `.agents/skills/3-solutioning-acl-agent-<slug>/`
@@ -245,8 +252,10 @@ When generating phase deliverables:
    author: "<Name>"
    created: "<YYYY-MM-DD>"
    ---
-   ```
+```
+
 3. Once the file is written, halt immediately and prompt the user to seek Manager approval in Markdown Studio.
+
 ```
 
 ---
@@ -327,6 +336,7 @@ When Markdown Studio loads in the browser (`http://localhost:5173/markdown.html`
 ### Walkthrough: Alex (Python Code Reviewer)
 
 An existing example in this repository is **Alex** (`acl-agent-python-reviewer`):
+
 - **Location**: `.agents/skills/acl-agent-python-reviewer/` and `_acl/custom/skills/acl-agent-python-reviewer/`
 - **Role**: Python Code Reviewer auditing code against PEP standards.
 - **Operating Modes**: Supports `[RO] Report Only` and `[RF] Report & Fix`.
@@ -350,6 +360,7 @@ If your agent is an **Important Agent** (owns or introduces a mandatory phase ga
 When a Manager clicks **Approve** on a deliverable in Markdown Studio, [public/markdown/js/floating-nav.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown/js/floating-nav.js) displays a persistent floating banner advising the developer on the exact Next Agent to run.
 
 #### A. Add to `ACL_AGENTS_DIRECTORY`:
+
 Open `public/markdown/js/floating-nav.js` and add your agent entry:
 
 ```javascript
@@ -375,6 +386,7 @@ const ACL_AGENTS_DIRECTORY = {
 ```
 
 #### B. Update `getNextAgentForApprovedDoc()`:
+
 Update the document transition logic in `floating-nav.js` to recommend your agent when its predecessor document is approved:
 
 ```javascript
@@ -495,12 +507,14 @@ Add a dedicated entry for your Important Agent:
 Ensure the agent is mapped to the explicit phase module rather than the generic fallback:
 
 #### In `public/markdown/js/agents.js`:
+
 ```javascript
 // public/markdown/js/agents.js (Inside SKILL_MODULE_MAP around line 30)
 'acl-agent-security-auditor': { module: '3-solutioning', label: 'Phase 3 · Solutioning', short: 'Solutioning' },
 ```
 
 #### In `api/list-agents.js`:
+
 ```javascript
 // api/list-agents.js (Inside SKILL_MODULE_MAP around line 50)
 'acl-agent-security-auditor': PHASE_3,
@@ -511,6 +525,7 @@ Ensure the agent is mapped to the explicit phase module rather than the generic 
 ### Step 5: Offline Cache Refresh (`public/acl-agents.json`)
 
 To make sure Markdown Studio displays your new agent in production or offline mode:
+
 1. Re-generate or update `public/acl-agents.json` and `acl-agents.json`.
 2. Add your agent definition into the `"agents"` array of `public/acl-agents.json`:
 
@@ -544,17 +559,17 @@ To make sure Markdown Studio displays your new agent in production or offline mo
 
 ## 7. Comprehensive Comparison Matrix
 
-| Aspect | 🟢 Non-Important / Utility Agent | 🔴 Important / Phase-Gate Driving Agent |
-| :--- | :--- | :--- |
-| **Typical Role** | Advisory reviewer, formatter, prompt helper, explorer. | Phase gatekeeper, deliverable producer, implementation driver. |
-| **Primary Goal** | Assist developer on-demand without stopping the pipeline. | Enforce compliance, quality, and architecture before code. |
-| **Requires Manager Sign-Off?** | Optional (Review reports may be reviewed or informational). | **Mandatory & Non-Negotiable** (Downstream locked until Approved). |
-| **Needs edits in `floating-nav.js`?** | ❌ No | ✅ **Yes** (`ACL_AGENTS_DIRECTORY` & `getNextAgentForApprovedDoc`) |
-| **Needs edits in `working-tree.js`?** | ❌ No | ✅ **Yes** (`WT_AGENTS`, `WT_SKILL_AGENT`, `WT_GATES`) |
-| **Needs edits in `agents.js`?** | ❌ No (Uses automatic dynamic fallback) | ✅ **Yes** (`SKILL_OFFICE_REGISTRY` & `SKILL_MODULE_MAP`) |
-| **Needs edits in `api/list-agents.js`?**| ❌ No (Auto-scans folder) | ⚠️ Recommended (`SKILL_MODULE_MAP` for canonical badge) |
-| **Auto-discovered in Agents Browser?** | ✅ Yes, automatically via directory scan | ✅ Yes, automatically |
-| **Implementation Effort** | **Minimal** (15 mins: `SKILL.md`, `customize.toml`, `config.toml`) | **Complete** (30 mins: Skill authoring + Studio JS integrations) |
+| Aspect                                           | 🟢 Non-Important / Utility Agent                                               | 🔴 Important / Phase-Gate Driving Agent                                      |
+| :----------------------------------------------- | :----------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
+| **Typical Role**                           | Advisory reviewer, formatter, prompt helper, explorer.                         | Phase gatekeeper, deliverable producer, implementation driver.               |
+| **Primary Goal**                           | Assist developer on-demand without stopping the pipeline.                      | Enforce compliance, quality, and architecture before code.                   |
+| **Requires Manager Sign-Off?**             | Optional (Review reports may be reviewed or informational).                    | **Mandatory & Non-Negotiable** (Downstream locked until Approved).     |
+| **Needs edits in `floating-nav.js`?**    | ❌ No                                                                          | ✅ **Yes** (`ACL_AGENTS_DIRECTORY` & `getNextAgentForApprovedDoc`) |
+| **Needs edits in `working-tree.js`?**    | ❌ No                                                                          | ✅ **Yes** (`WT_AGENTS`, `WT_SKILL_AGENT`, `WT_GATES`)           |
+| **Needs edits in `agents.js`?**          | ❌ No (Uses automatic dynamic fallback)                                        | ✅ **Yes** (`SKILL_OFFICE_REGISTRY` & `SKILL_MODULE_MAP`)          |
+| **Needs edits in `api/list-agents.js`?** | ❌ No (Auto-scans folder)                                                      | ⚠️ Recommended (`SKILL_MODULE_MAP` for canonical badge)                  |
+| **Auto-discovered in Agents Browser?**     | ✅ Yes, automatically via directory scan                                       | ✅ Yes, automatically                                                        |
+| **Implementation Effort**                  | **Minimal** (15 mins: `SKILL.md`, `customize.toml`, `config.toml`) | **Complete** (30 mins: Skill authoring + Studio JS integrations)       |
 
 ---
 
@@ -588,8 +603,8 @@ To make sure Markdown Studio displays your new agent in production or offline mo
      - Edit `floating-nav.js`: Wire `architecture-spine.md` approval to recommend Diana, and wire `security-spine.md` approval to recommend John (`acl-create-epics-and-stories`).
      - Edit `working-tree.js` & `working_tree.py`: Add `security` agent and `security-spine.md` gate.
      - Edit `agents.js`: Add executive business value card to `SKILL_OFFICE_REGISTRY`.
-  4. **Result**: As soon as the Manager approves the Architecture Spine, the Studio floating bar pops up with:  
-     *"Approved! Next Step: Run Diana (Security Auditor) with `@acl-agent-security-auditor`"*.  
+  4. **Result**: As soon as the Manager approves the Architecture Spine, the Studio floating bar pops up with:
+     *"Approved! Next Step: Run Diana (Security Auditor) with `@acl-agent-security-auditor`"*.
      Code generation remains completely locked until the Manager signs off on Diana's security spine!
 
 ---
@@ -599,18 +614,23 @@ To make sure Markdown Studio displays your new agent in production or offline mo
 If you created your agent but it does not appear in Markdown Studio (`markdown.html`), check these common causes:
 
 ### 1. The `public/acl-agents.json` Static Cache
+
 In [vite.config.js](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/vite.config.js#L268-L285), the `/api/list-agents` endpoint checks if `public/acl-agents.json` exists. If present, it serves this static file and ignores new folders!
+
 - **Fix for Local Dev**:
   ```powershell
   # Delete the static cache to allow Vite to scan dynamically:
   Remove-Item public\acl-agents.json
   ```
+
   *Once deleted, Vite scans `.agents/skills` on every browser reload.*
 
 ### 2. Embedded Agents in HTML
+
 Check if [public/markdown.html](file:///C:/Users/ashwin.premnath/Desktop/Project/ACL-Project/Code-review/vite-project/public/markdown.html#L39) has a hardcoded `window.__ACL_EMBEDDED_AGENTS__`. This array acts as a third-tier fallback when both `/api/list-agents` and `/acl-agents.json` fail.
 
 ### 3. File Encoding
+
 Ensure `SKILL.md` is encoded in UTF-8 (without BOM). Encoding corruption can prevent frontmatter parsers from reading `name:` and `description:`.
 
 ---

@@ -195,7 +195,7 @@ async function universalHandler(arg1, arg2) {
       process.env.VERCEL_GIT_COMMIT_REF ||
       process.env.BRANCH ||
       process.env.HEAD ||
-      'main'
+      'master'
     ).trim();
 
     // Auto-detect owner and repo from Netlify REPOSITORY_URL or package.json if not explicitly provided
@@ -249,9 +249,19 @@ async function universalHandler(arg1, arg2) {
 
       // Check for existing file SHA
       let sha;
-      const getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoFilePath}?ref=${encodeURIComponent(branch)}`;
+      let effectiveBranch = branch;
+      let getUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoFilePath}?ref=${encodeURIComponent(effectiveBranch)}`;
       try {
-        const getRes = await fetch(getUrl, { headers });
+        let getRes = await fetch(getUrl, { headers });
+        if (!getRes.ok && (effectiveBranch === 'main' || effectiveBranch === 'master')) {
+          const altBranch = effectiveBranch === 'main' ? 'master' : 'main';
+          const altUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${repoFilePath}?ref=${encodeURIComponent(altBranch)}`;
+          const altRes = await fetch(altUrl, { headers });
+          if (altRes.ok) {
+            getRes = altRes;
+            effectiveBranch = altBranch;
+          }
+        }
         if (getRes.ok) {
           const fileData = await getRes.json();
           sha = fileData.sha;
@@ -288,7 +298,7 @@ async function universalHandler(arg1, arg2) {
         body: JSON.stringify({
           message: commitMsg,
           content: Buffer.from(content, 'utf8').toString('base64'),
-          branch: branch,
+          branch: effectiveBranch,
           ...(sha ? { sha } : {}),
         }),
       });
@@ -319,11 +329,11 @@ async function universalHandler(arg1, arg2) {
         repoConnected: true,
         gitPushed: true,
         repo: `${owner}/${repo}`,
-        branch: branch,
+        branch: effectiveBranch,
         path: repoFilePath,
         commitSha: commitResult.commit?.sha || commitResult.sha,
         status: status,
-        message: `Successfully committed ${cleanFilename} to ${owner}/${repo}@${branch}`,
+        message: `Successfully committed ${cleanFilename} to ${owner}/${repo}@${effectiveBranch}`,
       });
     }
 
